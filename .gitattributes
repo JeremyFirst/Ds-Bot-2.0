@@ -1,0 +1,26 @@
+# Нормализация окончаний строк
+* text=auto eol=crlf
+
+# Исключения для бинарных файлов
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.ico binary
+*.pdf binary
+
+# Python файлы
+*.py text eol=lf
+
+# Markdown файлы
+*.md text eol=crlf
+
+# YAML файлы
+*.yml text eol=crlf
+*.yaml text eol=crlf
+
+# Конфигурационные файлы
+.env text eol=crlf
+.gitignore text eol=crlf
+.gitattributes text eol=crlf
+
