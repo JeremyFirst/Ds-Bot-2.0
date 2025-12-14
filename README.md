@@ -86,10 +86,10 @@ python bot.py
 1. Настройте переменные окружения в панели (см. [PTERODACTYL_SETUP.md](PTERODACTYL_SETUP.md))
 2. Используйте startup command с автоматическим клонированием:
 ```bash
-cd /home/container && if [[ ! -d .git ]] || [[ ! -f bot.py ]]; then echo "Клонирование репозитория..."; rm -rf * .[^.]* 2>/dev/null || true; git clone https://github.com/JeremyFirst/Ds-Bot-2.0.git .; fi && if [[ -d .git ]] && [[ "${AUTO_UPDATE}" == "1" ]]; then git pull; fi && if [[ -f requirements.txt ]]; then pip install -U --prefix .local -r requirements.txt; fi && /usr/local/bin/python bot.py
+cd /home/container && if [[ ! -d .git ]] || [[ ! -f bot.py ]]; then echo "Клонирование репозитория..."; rm -rf * .[^.]* 2>/dev/null || true; git clone https://github.com/JeremyFirst/Ds-Bot-2.0.git .; fi && if [[ -d .git ]] && [[ "${AUTO_UPDATE}" == "1" ]]; then echo "Обновление репозитория..."; git fetch origin && git reset --hard origin/main || git reset --hard origin/master; fi && if [[ -f requirements.txt ]]; then pip install -U --prefix .local -r requirements.txt; fi && /usr/local/bin/python bot.py
 ```
 
-Эта команда автоматически клонирует репозиторий при первом запуске.
+Эта команда автоматически клонирует репозиторий при первом запуске и принудительно обновляет его при последующих запусках (удаляя локальные изменения).
 
 ## ⚙️ Конфигурация
 

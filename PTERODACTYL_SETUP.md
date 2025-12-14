@@ -7,7 +7,7 @@
 Эта команда автоматически клонирует репозиторий при первом запуске и обновляет его при последующих запусках:
 
 ```
-cd /home/container && if [[ ! -d .git ]] || [[ ! -f bot.py ]]; then echo "Клонирование репозитория..."; rm -rf * .[^.]* 2>/dev/null || true; git clone https://github.com/JeremyFirst/Ds-Bot-2.0.git .; fi && if [[ -d .git ]] && [[ "${AUTO_UPDATE}" == "1" ]]; then git pull; fi && if [[ -f requirements.txt ]]; then pip install -U --prefix .local -r requirements.txt; fi && /usr/local/bin/python bot.py
+cd /home/container && if [[ ! -d .git ]] || [[ ! -f bot.py ]]; then echo "Клонирование репозитория..."; rm -rf * .[^.]* 2>/dev/null || true; git clone https://github.com/JeremyFirst/Ds-Bot-2.0.git .; fi && if [[ -d .git ]] && [[ "${AUTO_UPDATE}" == "1" ]]; then echo "Обновление репозитория..."; git fetch origin && git reset --hard origin/main || git reset --hard origin/master; fi && if [[ -f requirements.txt ]]; then pip install -U --prefix .local -r requirements.txt; fi && /usr/local/bin/python bot.py
 ```
 
 **⚠️ ВАЖНО:** Копируйте команду БЕЗ обратных кавычек (```) в начале и конце! Вставляйте только саму команду в поле Startup Command.
@@ -15,11 +15,21 @@ cd /home/container && if [[ ! -d .git ]] || [[ ! -f bot.py ]]; then echo "Кло
 **Что делает команда:**
 1. Переходит в `/home/container`
 2. Если нет `.git` или `bot.py` - клонирует репозиторий
-3. Если `AUTO_UPDATE=1` - обновляет код через `git pull`
+3. Если `AUTO_UPDATE=1` - принудительно обновляет код через `git reset --hard` (удаляет локальные изменения)
 4. Устанавливает зависимости из `requirements.txt`
 5. Запускает бота
 
-### Вариант 2: Без автообновления
+**⚠️ ВНИМАНИЕ:** `git reset --hard` удалит все локальные изменения в файлах. Если нужны локальные изменения, используйте Вариант 2.
+
+### Вариант 2: С сохранением локальных изменений (stash)
+
+Если нужно сохранить локальные изменения перед обновлением:
+
+```
+cd /home/container && if [[ ! -d .git ]] || [[ ! -f bot.py ]]; then echo "Клонирование репозитория..."; rm -rf * .[^.]* 2>/dev/null || true; git clone https://github.com/JeremyFirst/Ds-Bot-2.0.git .; fi && if [[ -d .git ]] && [[ "${AUTO_UPDATE}" == "1" ]]; then echo "Обновление репозитория..."; git stash; git pull; git stash pop || true; fi && if [[ -f requirements.txt ]]; then pip install -U --prefix .local -r requirements.txt; fi && /usr/local/bin/python bot.py
+```
+
+### Вариант 3: Без автообновления
 
 Если не хотите использовать автообновление:
 

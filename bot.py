@@ -6,6 +6,7 @@ import os
 import logging
 import asyncio
 import discord
+from discord import app_commands
 from discord.ext import tasks
 from dotenv import load_dotenv
 
@@ -39,6 +40,8 @@ intents.message_content = False
 
 # Создаём клиент бота
 bot = discord.Client(intents=intents)
+# Создаём дерево команд
+tree = app_commands.CommandTree(bot)
 
 # Глобальные сервисы
 rcon_client: RCONClient = None
@@ -56,7 +59,7 @@ async def on_ready():
     
     # Синхронизируем команды
     try:
-        synced = await bot.tree.sync()
+        synced = await tree.sync()
         logger.info(f'Синхронизировано {len(synced)} команд')
     except Exception as e:
         logger.error(f'Ошибка при синхронизации команд: {e}')
@@ -213,8 +216,8 @@ def main():
     addprivilege_command = AddPrivilegeCommand(bot, rcon_client, staff_embed_service)
     
     # Регистрируем команды
-    staff_command.register_commands(bot.tree)
-    addprivilege_command.register_commands(bot.tree)
+    staff_command.register_commands(tree)
+    addprivilege_command.register_commands(tree)
     
     # Получаем токен бота
     token = os.getenv('DISCORD_BOT_TOKEN')
